@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    min-height: max(884px, 100dvh);
+  }
+}
+
+@layer components {
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .scrapbook-badge {
+    transform: rotate(-5deg);
+  }
+  .digital-invert:active {
+    filter: invert(1);
+  }
+  .custom-grid-mosaic {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+  }
+  .bottom-border-input {
+    border-bottom: 1px solid #000000;
+    background: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+}
