@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSettings } from '../context/SettingsContext';
+import { getImageUrl } from '../services/api';
 
 const ProductCard = ({ product, onClick }) => {
   const { getWhatsAppUrl } = useSettings();
@@ -22,7 +23,7 @@ const ProductCard = ({ product, onClick }) => {
       {/* Image Container */}
       <div className="relative w-full aspect-square overflow-hidden bg-[#eee] flex items-center justify-center border-b border-gray-100">
         <img
-          src={product.image}
+          src={getImageUrl(product.image)}
           alt={product.title}
           className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-1000 ease-out"
           style={{ filter: 'grayscale(10%) contrast(110%)' }}

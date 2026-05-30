@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { categoryService } from '../services/categoryService';
+import { getImageUrl } from '../services/api';
 
 // Fallback images for categories that don't have images uploaded yet
 import banner1 from '../assets/download (8).jpeg';
@@ -60,7 +61,7 @@ const Lifestyle = ({ onNavigate }) => {
       {/* 6-Card Grid */}
       <section className="w-full grid grid-cols-2 md:grid-cols-3 gap-1 bg-white overflow-hidden">
         {displayCategories.map((cat, index) => {
-          const imgSrc = cat.image || fallbackImages[index % fallbackImages.length];
+          const imgSrc = getImageUrl(cat.image) || fallbackImages[index % fallbackImages.length];
           return (
             <div
               key={cat._id}

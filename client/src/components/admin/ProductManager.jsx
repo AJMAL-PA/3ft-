@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { productService } from '../../services/productService';
 import { categoryService } from '../../services/categoryService';
 import { attributeService } from '../../services/attributeService';
+import { getImageUrl } from '../../services/api';
 
 const emptyForm = {
   title: '', sku: '', price: '', category: '', description: '',
@@ -54,9 +55,9 @@ export default function ProductManager() {
     setEditTarget(p);
 
     const existingImages = p.images && p.images.length > 0
-      ? p.images.map((url, index) => ({ id: `existing-${index}`, url, file: null, isExisting: true }))
+      ? p.images.map((url, index) => ({ id: `existing-${index}`, url: getImageUrl(url), file: null, isExisting: true }))
       : p.image
-        ? [{ id: 'existing-0', url: p.image, file: null, isExisting: true }]
+        ? [{ id: 'existing-0', url: getImageUrl(p.image), file: null, isExisting: true }]
         : [];
 
     setForm({
@@ -230,7 +231,7 @@ export default function ProductManager() {
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-11 h-11 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
-                          <img src={p.image} alt={p.title} className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/44'; }} />
+                          <img src={getImageUrl(p.image)} alt={p.title} className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/44'; }} />
                         </div>
                         <div>
                           <p className="font-bold text-sm text-[#111] uppercase tracking-wide leading-tight" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{p.title}</p>
@@ -399,7 +400,7 @@ export default function ProductManager() {
                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
                       {form.imagesList.map((img, idx) => (
                         <div key={img.id} className="relative aspect-square rounded-xl overflow-hidden border border-gray-100 group shadow-sm bg-gray-50">
-                          <img src={img.url} alt="preview" className="w-full h-full object-cover" />
+                          <img src={getImageUrl(img.url)} alt="preview" className="w-full h-full object-cover" />
                           
                           {/* Badge for default card image */}
                           {idx === 0 && (

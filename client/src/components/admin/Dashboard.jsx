@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { productService } from '../../services/productService';
+import { getImageUrl } from '../../services/api';
 
 const StatCard = ({ label, value, icon, accent = false }) => (
   <div className={`bg-white rounded-2xl p-6 border ${accent ? 'border-[#9a2a2a]/20' : 'border-gray-100'} shadow-sm`}>
@@ -88,7 +89,7 @@ export default function Dashboard() {
             {stats.recentProducts.map((p) => (
               <div key={p._id} className="px-6 py-4 flex items-center gap-4 hover:bg-gray-50/50 transition-colors">
                 <div className="w-12 h-12 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
-                  <img src={p.image} alt={p.title} className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/48'; }} />
+                  <img src={getImageUrl(p.image)} alt={p.title} className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/48'; }} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-sm text-[#111] truncate uppercase tracking-wide" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>

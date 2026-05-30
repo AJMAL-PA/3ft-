@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSettings } from '../context/SettingsContext';
 import { productService } from '../services/productService';
+import { getImageUrl } from '../services/api';
 import ProductCard from './ProductCard';
 
 export default function ProductDetail({ product, onNavigate, previousPage }) {
@@ -115,7 +116,7 @@ export default function ProductDetail({ product, onNavigate, previousPage }) {
           {/* Main Display Image */}
           <div className="w-full aspect-square bg-[#eee] relative overflow-hidden shadow-sm border border-gray-100 flex items-center justify-center">
             <img 
-              src={activeImage || product.image} 
+              src={getImageUrl(activeImage || product.image)} 
               alt={product.title} 
               className="w-full h-full object-cover object-center transition-all duration-300"
               style={{ filter: 'grayscale(5%) contrast(105%)' }}
@@ -131,7 +132,7 @@ export default function ProductDetail({ product, onNavigate, previousPage }) {
           {images.length > 1 && (
             <div className="flex gap-3 overflow-x-auto py-1 scrollbar-thin">
               {images.map((imgUrl, idx) => {
-                const isActive = (activeImage || product.image) === imgUrl;
+                const isActive = getImageUrl(activeImage || product.image) === getImageUrl(imgUrl);
                 return (
                   <button
                     key={idx}
@@ -144,7 +145,7 @@ export default function ProductDetail({ product, onNavigate, previousPage }) {
                     }`}
                   >
                     <img 
-                      src={imgUrl} 
+                      src={getImageUrl(imgUrl)} 
                       alt={`${product.title} view ${idx + 1}`} 
                       className="w-full h-full object-cover object-center" 
                     />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { categoryService } from '../../services/categoryService';
+import { getImageUrl } from '../../services/api';
 
 const emptyForm = { name: '', image: null, imagePreview: '' };
 
@@ -29,7 +30,7 @@ export default function CategoryManager() {
   const openAdd = () => { setEditTarget(null); setForm(emptyForm); setModalOpen(true); };
   const openEdit = (cat) => {
     setEditTarget(cat);
-    setForm({ name: cat.name, image: null, imagePreview: cat.image || '' });
+    setForm({ name: cat.name, image: null, imagePreview: getImageUrl(cat.image) || '' });
     setModalOpen(true);
   };
   const closeModal = () => { setModalOpen(false); setEditTarget(null); setForm(emptyForm); };
@@ -128,7 +129,7 @@ export default function CategoryManager() {
                   <td className="px-6 py-4 hidden md:table-cell">
                     {cat.image ? (
                       <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100">
-                        <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
+                        <img src={getImageUrl(cat.image)} alt={cat.name} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
                       </div>
                     ) : (
                       <span className="text-gray-300 text-xs">No image</span>
@@ -183,7 +184,7 @@ export default function CategoryManager() {
                 >
                   {form.imagePreview ? (
                     <div className="flex flex-col items-center gap-2">
-                      <img src={form.imagePreview} alt="preview" className="w-24 h-24 object-cover rounded-xl" />
+                      <img src={getImageUrl(form.imagePreview)} alt="preview" className="w-24 h-24 object-cover rounded-xl" />
                       <p className="text-xs text-gray-400" style={{ fontFamily: 'Hanken Grotesk, sans-serif' }}>Click to change</p>
                     </div>
                   ) : (
