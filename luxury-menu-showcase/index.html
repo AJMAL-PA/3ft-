@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maison Monochrome — Premium Hamburger Navigation UI</title>
+  <!-- Google Fonts: Cormorant Garamond (Luxury Serif) & Tenor Sans (Editorial Geometric Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Tenor+Sans&display=swap" rel="stylesheet">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Subtle Noise Overlay (Film Grain Feel) -->
+  <div class="film-grain"></div>
+
+  <!-- Main Luxury Showcase Site Wrapper -->
+  <div class="site-container">
+    
+    <!-- Editorial Sticky Header -->
+    <header class="site-header">
+      <div class="logo">
+        <a href="#" class="brand-link">Maison Monochrome</a>
+      </div>
+      <!-- Hamburger Toggle Button -->
+      <button class="nav-toggle" aria-label="Toggle Menu" id="hamburger-btn">
+        <span class="hamburger-line line-1"></span>
+        <span class="hamburger-line line-2"></span>
+        <span class="hamburger-line line-3"></span>
+      </button>
+    </header>
+
+    <!-- Background Hero Content (Strong Black Cinematic Background) -->
+    <main class="hero-section">
+      <div class="hero-content">
+        <span class="hero-subtitle">ARCHITECTURAL STUDIO & HAUTE COUTURE</span>
+        <h1 class="hero-title">SILENT SPACE</h1>
+        <p class="hero-desc">An inquiry into form, shadow, and minimal materiality. Exploring the emotional resonance of monochrome architectural spaces.</p>
+        <div class="hero-cta-container">
+          <a href="#" class="cta-link">EXPLORE MONOGRAPH</a>
+        </div>
+      </div>
+      <div class="hero-footer-decor">
+        <span class="decor-coord">45.4642° N, 9.1900° E</span>
+        <span class="decor-year">COLLECTION ©2026</span>
+      </div>
+    </main>
+  </div>
+
+  <!-- Fullscreen Slide-in Menu Navigation Drawer -->
+  <div class="menu-overlay" id="menu-overlay">
+    
+    <!-- The Sliding Navigation Panel -->
+    <div class="menu-panel" id="menu-panel">
+      
+      <!-- Left side: Thin Vertical Image Strip -->
+      <div class="vertical-image-strip">
+        <img src="luxury_menu_strip.png" alt="Luxury Monochrome Texture Detail" class="strip-image">
+        <div class="strip-overlay"></div>
+      </div>
+
+      <!-- Right side: Soft White Menu Content Panel -->
+      <div class="menu-content-container">
+        
+        <!-- Logo Emblem Background Decor (Centered, Subtle, Editorial) -->
+        <div class="menu-emblem-container">
+          <svg class="emblem-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <path id="textPath" d="M 100, 100 m -65, 0 a 65,65 0 1,1 130,0 a 65,65 0 1,1 -130,0" fill="none" />
+            <text class="emblem-text">
+              <textPath href="#textPath" startOffset="0%">MAISON MONOCHROME • EST. 2026 • DESIGN STUDIO •</textPath>
+            </text>
+            <circle cx="100" cy="100" r="28" class="emblem-inner-circle" />
+            <polygon points="100,82 108,100 126,100 111,109 117,127 100,116 83,127 89,109 74,100 92,100" class="emblem-star" />
+          </svg>
+        </div>
+
+
+
+        <!-- Main Editorial Navigation Links -->
+        <nav class="menu-nav">
+          <ul class="nav-list">
+            <li class="nav-item"><a href="#" class="nav-link"><span class="nav-num">01</span>HOME</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><span class="nav-num">02</span>ABOUT</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><span class="nav-num">03</span>SERVICES</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><span class="nav-num">04</span>PORTFOLIO</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><span class="nav-num">05</span>PROJECTS</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><span class="nav-num">06</span>CONTACT</a></li>
+          </ul>
+        </nav>
+
+        <!-- Bottom Footer Section in Panel -->
+        <footer class="menu-footer">
+          <!-- Language Selector -->
+          <div class="lang-selector">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <span class="lang-divider">/</span>
+            <button class="lang-btn" data-lang="ar">AR</button>
+          </div>
+
+          <!-- Subtle Gold Highlight Detail Line -->
+          <div class="footer-gold-dot"></div>
+
+          <!-- Bottom Right: Search Box -->
+          <div class="menu-search-container">
+            <div class="search-input-wrapper">
+              <input type="text" placeholder="SEARCH ARCHIVE..." class="search-input" id="menu-search-input">
+              <span class="search-underline"></span>
+            </div>
+            <button class="search-icon-btn" aria-label="Submit Search">
+              <!-- Magnifying Glass Icon -->
+              <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+        </footer>
+
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- JavaScript file -->
+  <script src="main.js"></script>
+</body>
+</html>
