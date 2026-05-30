@@ -32,7 +32,8 @@ const connectDB = async () => {
       }
     } else {
       console.error(`❌ MongoDB Connection Error: ${error.message}`);
-      process.exit(1);
+      // Do not call process.exit(1) in production so the Express server can
+      // still start up and return proper CORS headers and database error details to the client.
     }
   }
 };
