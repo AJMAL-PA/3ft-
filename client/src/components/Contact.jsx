@@ -40,14 +40,12 @@ const Contact = () => {
       return;
     }
 
-    // Format message beautifully for WhatsApp
+    // Format message beautifully for WhatsApp with clean bullet points
     const formattedMessage = 
-      `*NEW INQUIRY - 3FT ARCHIVES*\n` +
-      `----------------------------------\n` +
-      `👤 *NAME:* ${name.trim().toUpperCase()}\n` +
-      `✉️ *EMAIL:* ${email.trim()}\n` +
-      `----------------------------------\n` +
-      `💬 *MESSAGE:*\n${message.trim()}`;
+      `*NEW INQUIRY - 3FT ARCHIVES*\n\n` +
+      `• *NAME:* ${name.trim().toUpperCase()}\n` +
+      `• *EMAIL:* ${email.trim()}\n\n` +
+      `• *MESSAGE:*\n${message.trim()}`;
 
     const num = (settings?.whatsappNumber || '9846417073').replace(/[^\d]/g, '');
     const whatsappUrl = `https://wa.me/${num}?text=${encodeURIComponent(formattedMessage)}`;
