@@ -1,11 +1,83 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Contact = () => {
-  const { getWhatsAppUrl } = useSettings();
+  const { settings, getWhatsAppUrl } = useSettings();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { name, email, message } = formData;
+
+    if (!name.trim()) {
+      toast.error('PLEASE ENTER YOUR NAME');
+      return;
+    }
+    if (!email.trim()) {
+      toast.error('PLEASE ENTER YOUR EMAIL');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      toast.error('PLEASE ENTER A VALID EMAIL');
+      return;
+    }
+    if (!message.trim()) {
+      toast.error('PLEASE ENTER YOUR MESSAGE');
+      return;
+    }
+
+    // Format message beautifully for WhatsApp
+    const formattedMessage = 
+      `*NEW INQUIRY - 3FT ARCHIVES*\n` +
+      `----------------------------------\n` +
+      `👤 *NAME:* ${name.trim().toUpperCase()}\n` +
+      `✉️ *EMAIL:* ${email.trim()}\n` +
+      `----------------------------------\n` +
+      `💬 *MESSAGE:*\n${message.trim()}`;
+
+    const num = (settings?.whatsappNumber || '9846417073').replace(/[^\d]/g, '');
+    const whatsappUrl = `https://wa.me/${num}?text=${encodeURIComponent(formattedMessage)}`;
+
+    window.open(whatsappUrl, '_blank');
+    toast.success('OPENING WHATSAPP...');
+
+    setFormData({
+      name: '',
+      email: '',
+      message: ''
+    });
+  };
 
   return (
     <section id="contact" className="bg-white py-8 md:py-20 px-margin-mobile md:px-margin-desktop border-t border-primary/20">
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: '#0b0b0b',
+            color: '#fff',
+            borderRadius: '0px',
+            border: '1px solid rgba(154, 42, 42, 0.2)',
+            fontFamily: 'inherit',
+            fontSize: '12px',
+            letterSpacing: '0.05em'
+          }
+        }}
+      />
       <div className="max-w-7xl mx-auto">
 
         {/* Large Heading */}
@@ -17,11 +89,14 @@ const Contact = () => {
 
           {/* Left Column: Minimal Form */}
           <div className="space-y-6 md:space-y-10">
-            <form className="space-y-5 md:space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-5 md:space-y-8">
               <div className="relative group">
                 <label className="block font-label-caps text-[10px] tracking-[0.25em] text-primary/50 mb-1.5 uppercase font-bold">Full name</label>
                 <input
                   type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   className="w-full bg-transparent border-t-0 border-x-0 border-b border-primary/20 py-2 px-0 focus:outline-none focus:ring-0 focus:border-primary font-body-base text-xs sm:text-sm tracking-wider transition-all placeholder:text-primary/30 uppercase"
                   placeholder="ENTER YOUR NAME"
                 />
@@ -31,7 +106,10 @@ const Contact = () => {
                 <label className="block font-label-caps text-[10px] tracking-[0.25em] text-primary/50 mb-1.5 uppercase font-bold">Email address</label>
                 <input
                   type="email"
-                  className="w-full bg-transparent border-t-0 border-x-0 border-b border-primary/20 py-2 px-0 focus:outline-none focus:ring-0 focus:border-primary font-body-base text-xs sm:text-sm tracking-wider transition-all placeholder:text-primary/30 uppercase"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full bg-transparent border-t-0 border-x-0 border-b border-primary/20 py-2 px-0 focus:outline-none focus:ring-0 focus:border-primary font-body-base text-xs sm:text-sm tracking-wider transition-all placeholder:text-primary/30"
                   placeholder="NAME@EXAMPLE.COM"
                 />
               </div>
@@ -40,12 +118,15 @@ const Contact = () => {
                 <label className="block font-label-caps text-[10px] tracking-[0.25em] text-primary/50 mb-1.5 uppercase font-bold">Messages</label>
                 <textarea
                   rows="2"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   className="w-full bg-transparent border-t-0 border-x-0 border-b border-primary/20 py-2 px-0 focus:outline-none focus:ring-0 focus:border-primary font-body-base text-xs sm:text-sm transition-all resize-none placeholder:text-primary/30 uppercase"
                   placeholder="HOW CAN WE HELP?"
                 ></textarea>
               </div>
 
-              <button className="w-full sm:w-auto bg-primary text-surface border border-primary px-8 py-3 rounded-none font-label-caps text-xs tracking-[0.2em] font-bold hover:bg-transparent hover:text-primary transition-all duration-300">
+              <button type="submit" className="w-full sm:w-auto bg-primary text-surface border border-primary px-8 py-3 rounded-none font-label-caps text-xs tracking-[0.2em] font-bold hover:bg-transparent hover:text-primary transition-all duration-300">
                 SUBMIT
               </button>
             </form>
