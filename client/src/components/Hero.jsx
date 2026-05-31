@@ -8,7 +8,7 @@ import BlurText from './TextAnimations/BlurText/BlurText';
 
 const Hero = ({ onNavigate, preloaderFinished }) => {
   return (
-    <section className="relative w-full h-[580px] md:h-[750px] overflow-hidden flex items-center justify-center border-b border-primary">
+    <section className="relative w-full h-[100vh] md:h-[calc(100vh-73px)] -mt-[57px] md:mt-0 overflow-hidden flex items-center justify-center border-b border-primary">
       {/* Desktop Background Video */}
       <video 
         autoPlay 

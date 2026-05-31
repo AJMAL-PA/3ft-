@@ -57,7 +57,7 @@ function PublicSite() {
   };
 
   return (
-    <div className="bg-background text-on-background font-body-base overflow-x-hidden min-h-screen flex flex-col">
+    <div className="bg-background text-on-background font-body-base overflow-x-clip min-h-screen flex flex-col">
       {preloaderActive && <Preloader onComplete={handlePreloaderComplete} />}
 
       <Header 

@@ -70,10 +70,10 @@ const ProductShowcase = ({ onNavigate }) => {
             ))}
           </div>
 
-          <div className="flex justify-center md:justify-end mt-2 md:mt-6">
+          <div className="flex justify-center md:justify-end mt-4 md:mt-6">
             <button
               onClick={() => onNavigate('shop')}
-              className="border border-black px-3 md:px-5 py-2 bg-transparent text-black font-label-caps text-[10px] tracking-[0.2em] uppercase hover:bg-black hover:text-white transition-colors duration-300 font-bold"
+              className="w-full md:w-auto text-center border border-black px-3 md:px-5 py-2.5 md:py-2 bg-transparent text-black font-label-caps text-[10px] tracking-[0.2em] uppercase hover:bg-black hover:text-white transition-colors duration-300 font-bold"
             >
               VIEW ALL
             </button>
@@ -101,10 +101,10 @@ const ProductShowcase = ({ onNavigate }) => {
               ))}
             </div>
 
-            <div className="flex justify-center md:justify-end mt-2 md:mt-6">
+            <div className="flex justify-center md:justify-end mt-4 md:mt-6">
               <button
                 onClick={() => onNavigate && onNavigate('shop', cat.name)}
-                className="border border-black px-3 md:px-5 py-2 bg-transparent text-black font-label-caps text-[10px] tracking-[0.2em] uppercase hover:bg-black hover:text-white transition-colors duration-300 font-bold"
+                className="w-full md:w-auto text-center border border-black px-3 md:px-5 py-2.5 md:py-2 bg-transparent text-black font-label-caps text-[10px] tracking-[0.2em] uppercase hover:bg-black hover:text-white transition-colors duration-300 font-bold"
               >
                 VIEW ALL
               </button>

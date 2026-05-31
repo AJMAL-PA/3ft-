@@ -17,20 +17,54 @@ const Shop = ({ selectedCategory = 'All', setSelectedCategory = () => {}, onNavi
   const [priceExpanded, setPriceExpanded] = useState(false);
   const [sortExpanded, setSortExpanded] = useState(false);
 
+  // Helper to normalize and check if a product matches search query
+  const matchesSearch = useMemo(() => {
+    return (p, q) => {
+      if (!q) return true;
+      const query = q.toLowerCase().trim();
+      const normalizedQuery = query.replace(/[^a-z0-9]/g, '');
+      
+      const containsNormalized = (str) => {
+        if (!str) return false;
+        return str.toLowerCase().replace(/[^a-z0-9]/g, '').includes(normalizedQuery);
+      };
+
+      // 1. Check title, sku, description
+      if (containsNormalized(p.title) || containsNormalized(p.sku) || containsNormalized(p.description)) {
+        return true;
+      }
+
+      // 2. Check category name
+      const categoryName = p.category?.name || (typeof p.category === 'string' ? p.category : '');
+      if (categoryName && containsNormalized(categoryName)) {
+        return true;
+      }
+
+      // 3. Check sizes
+      if (p.sizes && p.sizes.some(size => size.toLowerCase() === query)) {
+        return true;
+      }
+
+      // 4. Check attributes (name and values)
+      if (p.attributes && p.attributes.some(attr => 
+        containsNormalized(attr.name) || 
+        (attr.values && attr.values.some(val => containsNormalized(val)))
+      )) {
+        return true;
+      }
+
+      return false;
+    };
+  }, []);
+
   // Helper to get products matching search query for count calculations
   const searchedProducts = useMemo(() => {
     let result = [...products];
     if (searchQuery) {
-      const q = searchQuery.toLowerCase().trim();
-      result = result.filter(
-        (p) =>
-          p.title.toLowerCase().includes(q) ||
-          p.sku?.toLowerCase().includes(q) ||
-          p.description?.toLowerCase().includes(q)
-      );
+      result = result.filter((p) => matchesSearch(p, searchQuery));
     }
     return result;
-  }, [products, searchQuery]);
+  }, [products, searchQuery, matchesSearch]);
 
   // Fetch products and categories from API
   useEffect(() => {
@@ -54,19 +88,20 @@ const Shop = ({ selectedCategory = 'All', setSelectedCategory = () => {}, onNavi
     fetchData();
   }, []);
 
+  // Reset selected category to 'All' when a new search query is typed
+  useEffect(() => {
+    if (searchQuery) {
+      setSelectedCategory('All');
+    }
+  }, [searchQuery, setSelectedCategory]);
+
   // Filter and sort logic (works with API data)
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
     // Search filter
     if (searchQuery) {
-      const q = searchQuery.toLowerCase().trim();
-      result = result.filter(
-        (p) =>
-          p.title.toLowerCase().includes(q) ||
-          p.sku?.toLowerCase().includes(q) ||
-          p.description?.toLowerCase().includes(q)
-      );
+      result = result.filter((p) => matchesSearch(p, searchQuery));
     }
 
     // Category filter
@@ -130,9 +165,9 @@ const Shop = ({ selectedCategory = 'All', setSelectedCategory = () => {}, onNavi
     <section className="w-full bg-[#f9f9f9] text-[#111] py-20 md:py-32 px-6 md:px-12 lg:px-24 min-h-screen font-body-base">
 
       {/* Top Shop Title */}
-      <div className="border-b border-gray-200 pb-8 mb-16 flex flex-col items-center justify-center text-center gap-4">
+      <div className="max-w-[240px] sm:max-w-[320px] md:max-w-none mx-auto border-b border-gray-200 pb-8 mb-16 flex flex-col items-center justify-center text-center gap-4">
         <div>
-          <h1 className="font-headline-lg text-4xl md:text-5xl font-bold uppercase tracking-wider text-[#111]">
+          <h1 className="font-headline-lg text-3xl md:text-5xl font-bold uppercase tracking-wider text-[#111]">
             {searchQuery ? `Search Results` : 'Collection Archive'}
           </h1>
           <p className="text-gray-500 font-label-caps text-[10px] tracking-[0.3em] mt-2 uppercase">
@@ -145,15 +180,15 @@ const Shop = ({ selectedCategory = 'All', setSelectedCategory = () => {}, onNavi
       </div>
 
       {/* Mobile Filter Button */}
-      <div className="md:hidden flex justify-center mb-10">
+      <div className="md:hidden flex justify-end mb-8 max-w-[240px] sm:max-w-[320px] mx-auto w-full">
         <button
           onClick={() => setIsDrawerOpen(true)}
-          className="border border-[#111] bg-white text-[#111] py-3.5 px-12 font-label-caps text-[10px] tracking-[0.25em] font-bold hover:bg-[#111] hover:text-white transition-all duration-300 uppercase flex items-center gap-3 shadow-xs"
+          className="w-10 h-10 text-[#111] flex items-center justify-center hover:bg-[#111]/10 transition-all duration-300 focus:outline-none rounded-none"
+          aria-label="Filter"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
           </svg>
-          Filter By
         </button>
       </div>
 
