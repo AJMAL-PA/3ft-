@@ -1,4 +1,6 @@
 const Category = require('../models/Category');
+const { uploadToCloudinary, deleteFromCloudinary } = require('../utils/cloudinary');
+
 
 // @desc    Get all categories
 // @route   GET /api/categories
@@ -47,7 +49,7 @@ const createCategory = async (req, res) => {
     }
 
     const imageUrl = req.file
-      ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
+      ? await uploadToCloudinary(req.file.path, '3ft-archive/categories', req)
       : '';
 
     const category = await Category.create({ name: name.trim(), image: imageUrl });
@@ -63,23 +65,28 @@ const createCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
   try {
     const { name } = req.body;
-    const updateData = {};
-
-    if (name && name.trim()) updateData.name = name.trim();
-    if (req.file) {
-      updateData.image = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-    }
-
-    const category = await Category.findByIdAndUpdate(req.params.id, updateData, {
-      new: true,
-      runValidators: true,
-    });
-
+    
+    const category = await Category.findById(req.params.id);
     if (!category) {
       return res.status(404).json({ success: false, message: 'Category not found' });
     }
 
-    res.json({ success: true, data: category });
+    const updateData = {};
+    if (name && name.trim()) updateData.name = name.trim();
+    
+    if (req.file) {
+      if (category.image) {
+        await deleteFromCloudinary(category.image);
+      }
+      updateData.image = await uploadToCloudinary(req.file.path, '3ft-archive/categories', req);
+    }
+
+    const updatedCategory = await Category.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.json({ success: true, data: updatedCategory });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -90,11 +97,17 @@ const updateCategory = async (req, res) => {
 // @access  Admin
 const deleteCategory = async (req, res) => {
   try {
-    const category = await Category.findByIdAndDelete(req.params.id);
+    const category = await Category.findById(req.params.id);
 
     if (!category) {
       return res.status(404).json({ success: false, message: 'Category not found' });
     }
+
+    if (category.image) {
+      await deleteFromCloudinary(category.image);
+    }
+
+    await category.deleteOne();
 
     res.json({ success: true, message: `Category "${category.name}" deleted successfully` });
   } catch (error) {

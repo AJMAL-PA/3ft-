@@ -1,4 +1,6 @@
 const Product = require('../models/Product');
+const { uploadToCloudinary, deleteFromCloudinary } = require('../utils/cloudinary');
+
 
 const parseSizes = (sizesInput) => {
   if (!sizesInput) return ['S', 'M', 'L', 'XL'];
@@ -127,7 +129,9 @@ const createProduct = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Product image is required' });
     }
 
-    const imageUrls = req.files.map(file => `${req.protocol}://${req.get('host')}/uploads/${file.filename}`);
+    const imageUrls = await Promise.all(
+      req.files.map(file => uploadToCloudinary(file.path, '3ft-archive/products', req))
+    );
     const imageUrl = imageUrls[0];
 
     let parsedAttributes = [];
@@ -210,6 +214,12 @@ const updateProduct = async (req, res) => {
       }
     }
 
+    // Find old product to compare images and check existence
+    const oldProduct = await Product.findById(req.params.id);
+    if (!oldProduct) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
     // Handle image updates
     if (req.body.existingImages !== undefined || (req.files && req.files.length > 0)) {
       let existing = [];
@@ -225,7 +235,9 @@ const updateProduct = async (req, res) => {
         }
       }
       
-      const newUrls = req.files ? req.files.map(file => `${req.protocol}://${req.get('host')}/uploads/${file.filename}`) : [];
+      const newUrls = req.files && req.files.length > 0
+        ? await Promise.all(req.files.map(file => uploadToCloudinary(file.path, '3ft-archive/products', req)))
+        : [];
       const combined = [...existing, ...newUrls];
       
       if (combined.length > 0) {
@@ -234,16 +246,18 @@ const updateProduct = async (req, res) => {
       } else {
         return res.status(400).json({ success: false, message: 'Product image is required' });
       }
+
+      // Cleanup orphan images in Cloudinary
+      if (oldProduct.images && oldProduct.images.length > 0) {
+        const deletedImages = oldProduct.images.filter(img => !combined.includes(img));
+        await Promise.all(deletedImages.map(img => deleteFromCloudinary(img)));
+      }
     }
 
     const product = await Product.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
       runValidators: true,
     }).populate('category', 'name slug');
-
-    if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
-    }
 
     res.json({ success: true, data: product });
   } catch (error) {
@@ -256,11 +270,20 @@ const updateProduct = async (req, res) => {
 // @access  Admin
 const deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
+    const product = await Product.findById(req.params.id);
 
     if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
+
+    // Delete all product images from Cloudinary
+    if (product.images && product.images.length > 0) {
+      await Promise.all(product.images.map(img => deleteFromCloudinary(img)));
+    } else if (product.image) {
+      await deleteFromCloudinary(product.image);
+    }
+
+    await product.deleteOne();
 
     res.json({ success: true, message: `Product "${product.title}" deleted successfully` });
   } catch (error) {
