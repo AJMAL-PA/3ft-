@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Serve uploaded files as static
-const uploadsDir = process.env.NODE_ENV === 'production'
+const uploadsDir = (process.env.NODE_ENV === 'production' || process.env.VERCEL === '1' || process.env.LAMBDA_TASK_ROOT)
   ? '/tmp/uploads'
   : path.join(__dirname, 'uploads');
 app.use('/uploads', express.static(uploadsDir));

@@ -2,8 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure uploads directory exists
-const uploadsDir = process.env.NODE_ENV === 'production'
+const uploadsDir = (process.env.NODE_ENV === 'production' || process.env.VERCEL === '1' || process.env.LAMBDA_TASK_ROOT)
   ? '/tmp/uploads'
   : path.join(__dirname, '../uploads');
 
